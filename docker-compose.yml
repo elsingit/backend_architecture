@@ -10,7 +10,8 @@ services:
       - frontend
       - server-a
       - server-b
-      - emote-generator
+      - generator
+      - rabbitmq
     networks:
       - app_network
 
