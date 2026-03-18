@@ -32,6 +32,8 @@ async function start() {
                 const burstEmote = randomEmote();
                 let emojiCount = randomBetween(10, 40);
                 for (let i = 0; i < emojiCount; i++) {
+                    const msg = JSON.stringify({ burstEmote, timestamp: Date.now() });
+                    channel.publish(EXCHANGE, '', Buffer.from(msg));
                     console.log(`[Generator] Sent: ${burstEmote}`);
                     await sleep(randomBetween(50, 200));
                 }
@@ -40,6 +42,8 @@ async function start() {
                 const emoji = randomEmote();
                 let emojiCount = Math.random * 4;
                 for (let i = 0; i < emojiCount; i++) {
+                    const msg = JSON.stringify({ emoji, timestamp: Date.now() });
+                    channel.publish(EXCHANGE, '', Buffer.from(msg));
                     console.log(`[Generator] Sent: ${emoji}`);
                     await sleep(randomBetween(400, 800));
                 }
