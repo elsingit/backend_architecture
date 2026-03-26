@@ -27,6 +27,9 @@ services:
     environment:
       # Added credentials to the URL
       - RABBITMQ_URL=amqp://admin:securepassword@rabbitmq:5672
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
     networks:
       - app_network
 
@@ -36,6 +39,9 @@ services:
     environment:
       # Added credentials to the URL
       - RABBITMQ_URL=amqp://admin:securepassword@rabbitmq:5672
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
     networks:
       - app_network
 
