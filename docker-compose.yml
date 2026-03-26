@@ -10,63 +10,60 @@ services:
       - frontend
       - server-a
       - server-b
-      - emote-generator # Fixed name mismatch
+      - emote-generator
       - rabbitmq
     networks:
       - app_network
-
   frontend:
     build: ./frontend
     container_name: frontend_app
     networks:
       - app_network
-
   server-a:
     build: ./server-a
     container_name: server_a_realtime
     environment:
-      # Added credentials to the URL
       - RABBITMQ_URL=amqp://admin:securepassword@rabbitmq:5672
     depends_on:
       rabbitmq:
         condition: service_healthy
     networks:
       - app_network
-
   server-b:
     build: ./server-b
     container_name: server_b_analytics
     environment:
-      # Added credentials to the URL
       - RABBITMQ_URL=amqp://admin:securepassword@rabbitmq:5672
     depends_on:
       rabbitmq:
         condition: service_healthy
     networks:
       - app_network
-
   emote-generator:
     build: ./generator
     container_name: emote_gen
+    environment:
+      - RABBITMQ_URL=amqp://admin:securepassword@rabbitmq:5672
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
     networks:
       - app_network
-
-  # Indented rabbitmq to be inside 'services'
-rabbitmq:
-  image: rabbitmq:3-management
-  container_name: rabbitmq_broker
-  environment:
-    - RABBITMQ_DEFAULT_USER=admin
-    - RABBITMQ_DEFAULT_PASS=securepassword
-  ports:
-    - "15672:15672"
-  networks:
-    - app_network
-  healthcheck:
-    test: ["CMD", "rabbitmq-diagnostics", "ping"]
-    interval: 5s
-    timeout: 5s
-    retries: 10
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq_broker
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=securepassword
+    ports:
+      - "15672:15672"
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
 networks:
   app_network:
