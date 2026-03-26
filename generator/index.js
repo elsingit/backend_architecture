@@ -1,7 +1,7 @@
 const amqp = require('amqplib');
 
 const RABBIT_URL = 'amqp://rabbitmq';
-const EXCHANGE = 'name_your_channel';
+const EXCHANGE = 'emote_channel';
 const EMOTES = ['🔥', '❤️', '😂', '👍', '🎉', '😭'];
 
 function randomEmote() {
