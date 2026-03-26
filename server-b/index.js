@@ -5,7 +5,7 @@ const RABBIT_URL = process.env.RABBITMQ_URL || 'amqp://admin:securepassword@rabb
 
 // Match these exactly to your Generator and Assignment specs
 const RAW_EXCHANGE = 'emote_channel'; 
-const AGGREGATED_EXCHANGE = 'aggregated-emote-data';
+const AGGREGATED_EXCHANGE = 'meaningful_moments';
 
 async function start() {
     try {
