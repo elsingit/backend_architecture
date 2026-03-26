@@ -1,5 +1,7 @@
 const amqp = require('amqplib');
 
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 const RABBIT_URL = process.env.RABBITMQ_URL || 'amqp://admin:securepassword@rabbitmq:5672';
 const EXCHANGE = 'emote_channel';
 const EMOTES = ['🔥', '❤️', '😂', '👍', '🎉', '😭'];
