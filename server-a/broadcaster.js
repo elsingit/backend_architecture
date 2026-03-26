@@ -1,6 +1,6 @@
 import { WebSocketServer } from "ws";
 
-const wss = new WebSocketServer({ port: 3001 });
+const wss = new WebSocketServer({ port: 3000 });
 
 const clients = new Set();
 
