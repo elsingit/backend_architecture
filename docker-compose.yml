@@ -3,59 +3,68 @@ services:
     image: nginx:stable
     container_name: nginx_proxy
     ports:
-      - "80:80" # This is exposed to the browser
+      - "80:80"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./frontend/nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - frontend
       - server-a
       - server-b
-      - generator
+      - emote-generator
       - rabbitmq
     networks:
       - app_network
-
   frontend:
     build: ./frontend
     container_name: frontend_app
-    # no ports. only ngingngx
     networks:
       - app_network
-
-  server-a: # realtime server
+  server-a:
     build: ./server-a
     container_name: server_a_realtime
     environment:
-      - RABBITMQ_URL=amqp://rabbitmq:5672
+      - RABBITMQ_URL=amqp://admin:securepassword@rabbitmq:5672
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
     networks:
       - app_network
-
-  server-b: # analytics server
+  server-b:
     build: ./server-b
     container_name: server_b_analytics
     environment:
-      - RABBITMQ_URL=amqp://rabbitmq:5672
+      - RABBITMQ_URL=amqp://admin:securepassword@rabbitmq:5672
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
     networks:
       - app_network
-
   emote-generator:
     build: ./generator
     container_name: emote_gen
+    environment:
+      - RABBITMQ_URL=amqp://admin:securepassword@rabbitmq:5672
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
     networks:
       - app_network
-
-rabbitmq:
+  rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq_broker
     environment:
       - RABBITMQ_DEFAULT_USER=admin
       - RABBITMQ_DEFAULT_PASS=securepassword
     ports:
-      - "15672:15672" 
+      - "15672:15672"
     networks:
       - app_network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
-# This is the virtual network
 networks:
   app_network:
     driver: bridge

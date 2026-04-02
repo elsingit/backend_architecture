@@ -1,6 +1,8 @@
 const amqp = require('amqplib');
 
-const RABBIT_URL = 'amqp://rabbitmq';
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+const RABBIT_URL = process.env.RABBITMQ_URL || 'amqp://admin:securepassword@rabbitmq:5672';
 const EXCHANGE = 'emote_channel';
 const EMOTES = ['🔥', '❤️', '😂', '👍', '🎉', '😭'];
 
@@ -40,7 +42,7 @@ async function start() {
             //Normaalin emojireagoinnin generointi
             } else {
                 const emoji = randomEmote();
-                let emojiCount = Math.random * 4;
+                let emojiCount = Math.floor(Math.random() * 4) + 1;
                 for (let i = 0; i < emojiCount; i++) {
                     const msg = JSON.stringify({ emoji, timestamp: Date.now() });
                     channel.publish(EXCHANGE, '', Buffer.from(msg));
