@@ -36,7 +36,7 @@ async function start() {
                 for (let i = 0; i < emojiCount; i++) {
                     const msg = JSON.stringify({ emoji, timestamp: Date.now() });
                     channel.publish(EXCHANGE, '', Buffer.from(msg));
-                    console.log(`[Generator] Sent: ${burstEmote}`);
+                    console.log(`[Generator] Sent: ${emoji}`);
                     await sleep(randomBetween(50, 200));
                 }
             //Generating slow emoji reactions
