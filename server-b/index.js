@@ -27,21 +27,21 @@ async function start() {
         console.log(`Server B Connected to RabbitMQ. Monitoring ${RAW_EXCHANGE}`);
 
         channel.consume(q.queue, (msg) => {
-if (!msg.content) return;
+            if (!msg || !msg.content) return;
 
             const data = JSON.parse(msg.content.toString());
             const now = Date.now();
 
             reactionWindow.push(now);
 
-            //Deletion of more than one second old reactions
+            // Deletion of more than one second old reactions
             while (reactionWindow.length > 0 && reactionWindow[0] < now - WINDOW_MS) {
                 reactionWindow.shift();
             }
 
             console.log(`Server B: ${reactionWindow.length} reaktiota/s (emote: ${data.emoji})`);
 
-            //Meaningful moment is sent forward when recognized
+            // Meaningful moment is sent forward when recognized
             if (reactionWindow.length > THRESHOLD) {
                 const moment = {
                     timestamp: new Date(now).toISOString(),
@@ -53,9 +53,9 @@ if (!msg.content) return;
                     '',
                     Buffer.from(JSON.stringify(moment))
                 );
-                console.log('Meaningful moment lähetetty:', moment);
+                console.log('Server B forwarded meaningful moment to meaningful_moments:', moment);
 
-                //Emptying the window
+                // Emptying the window
                 reactionWindow.length = 0;
             }
 
