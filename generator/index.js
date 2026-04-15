@@ -29,17 +29,17 @@ async function start() {
         async function loop() {
 
             const roll = Math.random();
-            //Burstin generointi
+            //Generating a burst of emoji
             if (roll < 0.20) {
-                const burstEmote = randomEmote();
+                const emoji = randomEmote();
                 let emojiCount = randomBetween(10, 40);
                 for (let i = 0; i < emojiCount; i++) {
-                    const msg = JSON.stringify({ burstEmote, timestamp: Date.now() });
+                    const msg = JSON.stringify({ emoji, timestamp: Date.now() });
                     channel.publish(EXCHANGE, '', Buffer.from(msg));
-                    console.log(`[Generator] Sent: ${burstEmote}`);
+                    console.log(`[Generator] Sent: ${emoji}`);
                     await sleep(randomBetween(50, 200));
                 }
-            //Normaalin emojireagoinnin generointi
+            //Generating slow emoji reactions
             } else {
                 const emoji = randomEmote();
                 let emojiCount = Math.floor(Math.random() * 4) + 1;
