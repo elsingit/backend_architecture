@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const DEFAULT_SETTINGS = { windowMs: 5000, minCount: 1 };
+const DEFAULT_SETTINGS = { windowMs: 5000, treshold: 4 };
 
 export default function App() {
   const [events, setEvents] = useState([]);
@@ -66,11 +66,11 @@ export default function App() {
         </label>
         &nbsp;&nbsp;
         <label>
-          Min count:&nbsp;
+          Treshold:&nbsp;
           <input
             type="number"
-            value={formValues.minCount}
-            onChange={(e) => setFormValues((f) => ({ ...f, minCount: Number(e.target.value) }))}
+            value={formValues.treshold}
+            onChange={(e) => setFormValues((f) => ({ ...f, treshold: Number(e.target.value) }))}
           />
         </label>
         &nbsp;&nbsp;
