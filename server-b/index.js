@@ -1,4 +1,5 @@
 const amqp = require('amqplib');
+const express = require('express');
 
 // ENV vsr from compose
 const RABBIT_URL = process.env.RABBITMQ_URL || 'amqp://admin:securepassword@rabbitmq:5672';

@@ -22,9 +22,9 @@ export async function startConsumer(onMessage) {
             console.log('Server A received:', data);
             onMessage(data);
             channel.ack(msg);
-        } catch (parseErr) {
-          console.error('Failed to parse message:', parseErr);
-        }
+          } catch (parseErr) {
+            console.error('Failed to parse message:', parseErr);
+          }
         }
       });
       break;
