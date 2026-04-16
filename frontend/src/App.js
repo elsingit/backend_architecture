@@ -78,7 +78,7 @@ export default function App() {
         {settingsStatus === "saved" && <span style={{ color: "green", marginLeft: 8 }}>✓ Saved</span>}
         {settingsStatus === "error" && <span style={{ color: "red", marginLeft: 8 }}>✗ Error</span>}
         <p style={{ margin: "8px 0 0", fontSize: 12, color: "#666" }}>
-          Active: window={settings.windowMs}ms, minCount={settings.minCount}
+          Active: window={settings.windowMs}ms, treshold={settings.treshold}
         </p>
       </section>
 
@@ -93,7 +93,7 @@ export default function App() {
           }}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
               <span style={{ fontSize: 20 }}>
-                {e.topEmote} <strong>×{e.topEmoteCount}</strong>
+                {e.emote} <strong>×{e.count}</strong>
               </span>
               <span style={{ color: "#999", fontSize: 12 }}>{e.timestamp}</span>
             </div>
