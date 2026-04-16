@@ -8,8 +8,10 @@ const AGGREGATED_EXCHANGE = 'meaningful_moments';
 
 //Saving timestamps from the latest emojis
 const reactionWindow = [];
-const WINDOW_MS = 1000;   //Window of one second
-const THRESHOLD = 4;      //Over four reactions per second are flagged as a meaningful moment
+let WINDOW_MS = 1000;   //Window of one second by default, changeable from UI
+let THRESHOLD = 4;      //Meaningful moment is when treshold is crossed inside window
+let lastPublished = 0;
+const COOLDOWN_MS = 2000;
 
 //Express settings API
 const app = express();
@@ -52,15 +54,15 @@ async function start() {
 
             reactionWindow.push(now);
 
-            // Deletion of more than one second old reactions
+            //Deletion of more than one second old reactions
             while (reactionWindow.length > 0 && reactionWindow[0] < now - WINDOW_MS) {
                 reactionWindow.shift();
             }
 
             console.log(`Server B: ${reactionWindow.length} reactions/s (emote: ${data.emoji})`);
 
-            // Meaningful moment is sent forward when recognized
-            if (reactionWindow.length > THRESHOLD) {
+            //Meaningful moment is sent forward when recognized
+            if (reactionWindow.length > THRESHOLD && now - lastPublished > COOLDOWN_MS) {
                 const moment = {
                     timestamp: new Date(now).toISOString(),
                     count: reactionWindow.length,
@@ -72,9 +74,7 @@ async function start() {
                     Buffer.from(JSON.stringify(moment))
                 );
                 console.log('Server B forwarded meaningful moment to meaningful_moments:', moment);
-
-                // Emptying the window
-                reactionWindow.length = 0;
+                lastPublished = now;
             }
 
         }, { noAck: true });
