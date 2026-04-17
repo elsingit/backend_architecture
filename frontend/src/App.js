@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const DEFAULT_SETTINGS = { windowMs: 5000, treshold: 4 };
+const DEFAULT_SETTINGS = { windowMs: 5000, threshold: 4 };
 
 export default function App() {
   const [events, setEvents] = useState([]);
@@ -66,11 +66,11 @@ export default function App() {
         </label>
         &nbsp;&nbsp;
         <label>
-          Treshold:&nbsp;
+          Threshold:&nbsp;
           <input
             type="number"
-            value={formValues.treshold}
-            onChange={(e) => setFormValues((f) => ({ ...f, treshold: Number(e.target.value) }))}
+            value={formValues.threshold}
+            onChange={(e) => setFormValues((f) => ({ ...f, threshold: Number(e.target.value) }))}
           />
         </label>
         &nbsp;&nbsp;
@@ -78,7 +78,7 @@ export default function App() {
         {settingsStatus === "saved" && <span style={{ color: "green", marginLeft: 8 }}>✓ Saved</span>}
         {settingsStatus === "error" && <span style={{ color: "red", marginLeft: 8 }}>✗ Error</span>}
         <p style={{ margin: "8px 0 0", fontSize: 12, color: "#666" }}>
-          Active: window={settings.windowMs}ms, treshold={settings.treshold}
+          Active: window={settings.windowMs}ms, threshold={settings.threshold}
         </p>
       </section>
 
