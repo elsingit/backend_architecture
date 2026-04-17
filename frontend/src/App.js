@@ -97,12 +97,6 @@ export default function App() {
               </span>
               <span style={{ color: "#999", fontSize: 12 }}>{e.timestamp}</span>
             </div>
-            <div style={{ marginTop: 6, fontSize: 13 }}>
-              Total: {e.totalCount} &nbsp;|&nbsp;
-              Breakdown: {Object.entries(e.breakdown || {}).map(([emote, count]) => (
-                <span key={emote} style={{ marginRight: 8 }}>{emote} {count}</span>
-              ))}
-            </div>
             {e.bursts?.length > 0 && (
               <div style={{ marginTop: 4, color: "orange", fontSize: 12 }}>
                 ⚡ Burst: {e.bursts.join(" ")}
