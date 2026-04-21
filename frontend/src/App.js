@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import "./style.css"
-import rabbitVideo from "../public/rabbit.mp4";
 
 const DEFAULT_SETTINGS = { windowMs: 5000, threshold: 4 };
 
@@ -89,7 +88,7 @@ export default function App() {
 
       <div className="content-grid">
         <div className="media-panel">
-          <video src={rabbitVideo} autoPlay loop muted playsInline />
+          <video  src="/rabbit.mp4" autoPlay loop muted playsInline />
         </div>
         <section className="feed-panel">
           <h2>Live Feed</h2>
