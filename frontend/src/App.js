@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import "./style.css"
+import rabbitVideo from "../public/rabbit.mp4";
 
 const DEFAULT_SETTINGS = { windowMs: 5000, threshold: 4 };
 
@@ -11,17 +13,15 @@ export default function App() {
   //WebSocket: receive aggregated events from Server A
   useEffect(() => {
     const ws = new WebSocket(`ws://${window.location.host}/ws/`);
-
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
       setEvents((prev) => [data, ...prev]);
     };
-
     return () => ws.close();
   }, []);
 
   //REST: load current settings from Server B on mount
-    useEffect(() => {
+  useEffect(() => {
     fetch("/api/settings")
       .then((r) => r.json())
       .then((data) => {
@@ -50,61 +50,76 @@ export default function App() {
   }
 
   return (
-    <div style={{ fontFamily: "sans-serif", maxWidth: 700, margin: "0 auto", padding: 24 }}>
-      <h1>Meaningful Moments</h1>
+    <div className="app">
+      <header className="app-header">
+        <h1>Meaningful Moments</h1>
+      </header>
 
-      {/* Settings Panel */}
-      <section style={{ border: "1px solid #ccc", borderRadius: 8, padding: 16, marginBottom: 24 }}>
-        <h2 style={{ marginTop: 0 }}>Aggregator Settings</h2>
-        <label>
-          Window (ms):&nbsp;
-          <input
-            type="number"
-            value={formValues.windowMs}
-            onChange={(e) => setFormValues((f) => ({ ...f, windowMs: Number(e.target.value) }))}
-          />
-        </label>
-        &nbsp;&nbsp;
-        <label>
-          Threshold:&nbsp;
-          <input
-            type="number"
-            value={formValues.threshold}
-            onChange={(e) => setFormValues((f) => ({ ...f, threshold: Number(e.target.value) }))}
-          />
-        </label>
-        &nbsp;&nbsp;
-        <button onClick={saveSettings}>Save</button>
-        {settingsStatus === "saved" && <span style={{ color: "green", marginLeft: 8 }}>✓ Saved</span>}
-        {settingsStatus === "error" && <span style={{ color: "red", marginLeft: 8 }}>✗ Error</span>}
-        <p style={{ margin: "8px 0 0", fontSize: 12, color: "#666" }}>
-          Active: window={settings.windowMs}ms, threshold={settings.threshold}
+      <section className="settings-panel">
+        <h2>Aggregator Settings</h2>
+        <div className="settings-row">
+          <label>
+            Window (ms)
+            <input
+              type="number"
+              value={formValues.windowMs}
+              onChange={(e) =>
+                setFormValues((f) => ({ ...f, windowMs: Number(e.target.value) }))
+              }
+            />
+          </label>
+          <label>
+            Threshold
+            <input
+              type="number"
+              value={formValues.threshold}
+              onChange={(e) =>
+                setFormValues((f) => ({ ...f, threshold: Number(e.target.value) }))
+              }
+            />
+          </label>
+          <button className="btn-save" onClick={saveSettings}>Save</button>
+          {settingsStatus === "saved" && <span className="status-saved">✓ Saved</span>}
+          {settingsStatus === "error" && <span className="status-error">✗ Error</span>}
+        </div>
+        <p className="settings-active">
+          Active: window=<span>{settings.windowMs}ms</span>, threshold=<span>{settings.threshold}</span>
         </p>
       </section>
 
-      {/* Live Event Feed */}
-      <section>
-        <h2>Live Feed</h2>
-        {events.length === 0 && <p style={{ color: "#999" }}>Waiting for events...</p>}
-        {events.map((e, i) => (
-          <div key={i} style={{
-            border: "1px solid #eee", borderRadius: 6, padding: 12, marginBottom: 8,
-            background: i === 0 ? "#fffbea" : "white"
-          }}>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span style={{ fontSize: 20 }}>
-                {e.emote} <strong>×{e.count}</strong>
-              </span>
-              <span style={{ color: "#999", fontSize: 12 }}>{e.timestamp}</span>
-            </div>
-            {e.bursts?.length > 0 && (
-              <div style={{ marginTop: 4, color: "orange", fontSize: 12 }}>
-                ⚡ Burst: {e.bursts.join(" ")}
-              </div>
+      <div className="content-grid">
+        <div className="media-panel">
+          <video src={rabbitVideo} autoPlay loop muted playsInline />
+        </div>
+        <section className="feed-panel">
+          <h2>Live Feed</h2>
+          <div className="feed-scroll">
+            {events.length === 0 && (
+              <p className="feed-empty">Waiting for events…</p>
             )}
-          </div>
-        ))}
-      </section>
+            {events.map((e, i) => (
+              <div
+                key={i}
+                className={`event-card`}
+              >
+                <div className="event-card-top">
+                  <span className="event-emote">
+                    {e.emote}
+                    <span className="event-count">×{e.count}</span>
+                  </span>
+                  <span className="event-time">{e.timestamp}</span>
+                </div>
+                {e.bursts?.length > 0 && (
+                  <div className="event-burst">
+                    <span className="burst-icon">⚡</span>
+                    Burst: {e.bursts.join(" ")}
+                  </div>
+                )}
+              </div>
+            ))}
+            </div>
+        </section>
+      </div>
     </div>
   );
 }
