@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import "./style.css"
+import { triggerEmojiBurst } from "./burst";
 
 const DEFAULT_SETTINGS = { windowMs: 5000, threshold: 4 };
 
@@ -8,6 +9,7 @@ export default function App() {
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [formValues, setFormValues] = useState(DEFAULT_SETTINGS);
   const [settingsStatus, setSettingsStatus] = useState(null); // 'saved' | 'error'
+  const mediaPanelRef = useRef(null);
 
   //WebSocket: receive aggregated events from Server A
   useEffect(() => {
@@ -15,6 +17,10 @@ export default function App() {
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
       setEvents((prev) => [data, ...prev]);
+      // here activate the emoji burst animation
+      if (mediaPanelRef.current) {
+        triggerEmojiBurst(mediaPanelRef.current, data.emote, data.count);
+      }
     };
     return () => ws.close();
   }, []);
@@ -87,7 +93,10 @@ export default function App() {
       </section>
 
       <div className="content-grid">
-        <div className="media-panel">
+        <div className="media-panel"
+          ref={mediaPanelRef}
+          style={{ position: "relative" }}
+        >
           <video  src="/rabbit.mp4" autoPlay loop muted playsInline />
         </div>
         <section className="feed-panel">
