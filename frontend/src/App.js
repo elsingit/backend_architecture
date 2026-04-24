@@ -62,40 +62,75 @@ export default function App() {
 
       <section className="settings-panel">
         <h2>Aggregator Settings</h2>
-        <div className="settings-row">
+
+        <form
+          className="settings-row"
+          onSubmit={(e) => {
+            e.preventDefault();
+            saveSettings();
+          }}
+        >
           <label>
             Window (ms)
             <input
               type="number"
+              min={100}
+              step={100}
+              inputMode="numeric"
               value={formValues.windowMs}
               onChange={(e) =>
-                setFormValues((f) => ({ ...f, windowMs: Number(e.target.value) }))
+                setFormValues((f) => ({
+                  ...f,
+                  windowMs:
+                    e.target.value === ""
+                      ? ""
+                      : e.target.valueAsNumber,
+                }))
               }
             />
           </label>
+
           <label>
             Threshold
-            <input
-              type="number"
+            <input type="number"
+              min={1} step={1}
+              inputMode="numeric"
               value={formValues.threshold}
               onChange={(e) =>
-                setFormValues((f) => ({ ...f, threshold: Number(e.target.value) }))
+                setFormValues((f) => ({
+                  ...f,
+                  threshold:
+                    e.target.value === ""
+                      ? ""
+                      : e.target.valueAsNumber,
+                }))
               }
             />
           </label>
-          <button className="btn-save" onClick={saveSettings}>Save</button>
-          {settingsStatus === "saved" && <span className="status-saved">✓ Saved</span>}
-          {settingsStatus === "error" && <span className="status-error">✗ Error</span>}
-        </div>
+
+          <button className="btn-save" type="submit">
+            Save
+          </button>
+
+          {settingsStatus === "saved" && (
+            <span className="status-saved">✓ Saved</span>
+          )}
+
+          {settingsStatus === "error" && (
+            <span className="status-error">✗ Error</span>
+          )}
+        </form>
+
         <p className="settings-active">
-          Active: window=<span>{settings.windowMs}ms</span>, threshold=<span>{settings.threshold}</span>
+          Window = <span>{settings.windowMs} ms</span>, Threshold ={" "}
+          <span>{settings.threshold}</span>
         </p>
       </section>
 
       <div className="content-grid">
         <div className="media-panel"
           ref={mediaPanelRef}
-          style={{ position: "relative" }}
+          style ={{position: "relative"}}
         >
           <video  src="/rabbit.mp4" autoPlay loop muted playsInline />
         </div>
