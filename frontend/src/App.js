@@ -70,7 +70,10 @@ export default function App() {
       </header>
 
       <section className="settings-panel">
-        <h2>Aggregator Settings</h2>
+        <h2>
+          <span className="material-icons">settings</span>
+          Aggregator Settings
+        </h2>
 
         <form className="settings-row"
           onSubmit={(e) => {
@@ -130,7 +133,7 @@ export default function App() {
         </form>
 
         <p className="settings-active">
-          Window = <span>{settings.windowMs} ms</span>, Threshold ={" "}
+          Window = <span>{settings.windowMs} ms</span> Threshold ={" "}
           <span>{settings.threshold}</span>
         </p>
       </section>
@@ -143,7 +146,13 @@ export default function App() {
           <video  src="/rabbit.mp4" autoPlay loop muted playsInline />
         </div>
         <section className="feed-panel">
-          <h2>Live Feed</h2>
+          <div className= "feed-topbar">
+            <h2>Live Feed</h2>
+            <span className="material-icons small-icon schedule-icon">
+              schedule
+            </span>
+          </div>
+          
           <div className="feed-scroll">
             {events.length === 0 && (
               <p className="feed-empty">Waiting for events…</p>
@@ -157,7 +166,9 @@ export default function App() {
                     {e.emote}
                     <span className="event-count">×{e.count}</span>
                   </span>
-                  <span className="event-time">{formatTime(e.timestamp)}</span>
+                  <span className="event-time">
+                    {formatTime(e.timestamp)}
+                  </span>
                 </div>
                 {e.bursts?.length > 0 && (
                   <div className="event-burst">
