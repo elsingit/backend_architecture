@@ -54,6 +54,15 @@ export default function App() {
     }
   }
 
+  // Function for timestamp formatting
+  function formatTime(timestamp) {
+    return new Date(timestamp).toLocaleString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+  }
+
   return (
     <div className="app">
       <header className="app-header">
@@ -63,8 +72,7 @@ export default function App() {
       <section className="settings-panel">
         <h2>Aggregator Settings</h2>
 
-        <form
-          className="settings-row"
+        <form className="settings-row"
           onSubmit={(e) => {
             e.preventDefault();
             saveSettings();
@@ -141,16 +149,15 @@ export default function App() {
               <p className="feed-empty">Waiting for events…</p>
             )}
             {events.map((e, i) => (
-              <div
+              <div className={`event-card`}
                 key={i}
-                className={`event-card`}
               >
                 <div className="event-card-top">
                   <span className="event-emote">
                     {e.emote}
                     <span className="event-count">×{e.count}</span>
                   </span>
-                  <span className="event-time">{e.timestamp}</span>
+                  <span className="event-time">{formatTime(e.timestamp)}</span>
                 </div>
                 {e.bursts?.length > 0 && (
                   <div className="event-burst">
