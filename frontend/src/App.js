@@ -170,12 +170,6 @@ export default function App() {
                     {formatTime(e.timestamp)}
                   </span>
                 </div>
-                {e.bursts?.length > 0 && (
-                  <div className="event-burst">
-                    <span className="burst-icon">⚡</span>
-                    Burst: {e.bursts.join(" ")}
-                  </div>
-                )}
               </div>
             ))}
             </div>
