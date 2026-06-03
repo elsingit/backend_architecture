@@ -32,7 +32,7 @@ export function broadcast(data) {
   const message = JSON.stringify(data);
 
   for (const client of clients) {
-    if (client.readyState === 1) {
+    if (client.readyState === WebSocket.Open) {
       client.send(message);
     }
   }

@@ -18,12 +18,6 @@ export async function startConsumer(onMessage) {
       console.log('Server A: listening to meaningful_moments exchange');
 
       //Handles connection-level errors so the while loop can retry
-      conn.on("error", (err) => {
-        console.error("Server A: RabbitMQ connection error:", err.message);
-      });
-      conn.on("close", () => {
-        console.log("Server A: RabbitMQ connection closed, retrying...");
-      });
 
       channel.consume(q.queue, (msg) => {
         if (msg !== null) {
@@ -40,8 +34,14 @@ export async function startConsumer(onMessage) {
 
       //Waits here until the connection closes, then retries
       await new Promise((_, reject) => {
-        conn.on("close", reject);
-        conn.on("error", reject);
+        conn.on("close", () => {
+          console.log("Server A: RabbitMQ connection closed, retrying...");
+          reject(new Error("Connection closed"));
+        });
+        conn.on("error", (err) => {
+          console.error("Server A: RabbitMQ connection error:", err.message)
+          reject(err);
+        });
       });
 
     } catch (err) {
